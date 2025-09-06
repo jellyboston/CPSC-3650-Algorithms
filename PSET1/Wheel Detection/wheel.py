@@ -11,7 +11,7 @@ def rim_dfs_visit(g, u, hub, visited):
         if v == hub:
             continue
         if v not in visited:
-            rim_dfs_visit(g,v , hub, visited)
+            rim_dfs_visit(g, v, hub, visited)
 
 def dfs_check_rim_size(g, hub):
     visited = set()
