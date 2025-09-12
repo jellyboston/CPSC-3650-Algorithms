@@ -30,8 +30,8 @@ def extract_reverse_order(og_ordering, g):
     assert g.size() == len(og_ordering), "use interchangeably"
     reverse = []
     for v in range(g.size()):
-        assert og_ordering[v].finish != None
-        reverse[v] = (og_ordering[v].finish, v)
+        assert og_ordering[v].f != None
+        reverse.append((og_ordering[v].f, v))
     reverse.sort(reverse=True) # sorts descending by first element (finish)
     new_order = [v for f, v in reverse]
     return new_order
@@ -65,6 +65,8 @@ def sccs(g):
     components = []
     for v in reverse_order:
         if not seen[v]:
+            # NOTE: this is not topological order as we ran DFS on the reverse
             scc = second_pass_dfs(T_graph, v, seen)
             components.append(scc)
-    return sccs
+
+    return components

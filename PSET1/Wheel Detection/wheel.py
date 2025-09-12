@@ -31,26 +31,26 @@ def is_wheel(g):
     # check condition 1
     hub = None
     hub_count = 0
-    for v in range(g.size()):
+    for v in range(g.size()): # O(V)
         if g.outdegree(v) == g.size() - 1:
             hub_count += 1
             hub = v
     if hub_count != 1: return False
     
     # check condition 2: every rim vertex is a neighbor to the hub
-    for v in range(g.size()):
+    for v in range(g.size()): # O(V)
         if v != hub:
             if not g.has_edge(v, hub): return False
     
     # check condition 3: every rim vertex is deg'(v) = 2 (minus the hub)
-    for v in range(g.size()):
+    for v in range(g.size()): # O(V)
         if v != hub:
             # compute degree if hub were removed
             induced_degree = len(g.edges(v)) - 1
             if induced_degree != 2: return False
 
     # check condition 4: seen list yields V-1 vertices
-    if dfs_check_rim_size(g, hub) != g.size() - 1:
+    if dfs_check_rim_size(g, hub) != g.size() - 1: # O(V+E)
         return False
     
     return True
