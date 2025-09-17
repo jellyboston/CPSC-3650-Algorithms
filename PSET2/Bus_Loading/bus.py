@@ -23,4 +23,18 @@ def optimize_loading(groups, cap):
         cap -- an integer at least as large as each element in groups
     """
     # YOUR SOLUTION HERE
-    return [0]
+    # Greedy choice: sort to select the smallest group size
+    groups.sort()
+
+    # Init counters and return
+    group_index = []
+    cap_sum, group_ct = 0, 0
+    for i in range(len(groups)):
+        group_index.append(i)
+        while cap_sum <= cap:
+            cap_sum += groups[i]
+            i += 1
+        # Once full reset and move to the next bus
+        cap_sum = 0
+        group_ct += 1
+    return group_index
