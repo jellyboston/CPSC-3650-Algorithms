@@ -1,33 +1,42 @@
 '''
-First step - OH Questions:
-1. Clarify the problem -- what does L represent?
-2. Brainstorm the bruteforce approach
-
-Constraints:
-1. 
-
 Runtime: theta(n)
+Tasks: Explain why its worst-case runtime is theta(n)
+Explanation:
+In Phase A, we compute an extended array of fence points in Θ(n) time. We skip d[0] + P,
+so at most n-1 shifted trees are appened and the extended array has size O(n).
 
-Input: 
+In Phase B, we then utilize a sliding window strategy to pre-compute
+the farthest pt that satisfies the pre-condition (extend[r] - extend[i] ≤ L) 
+in order to avoid repeated work.
+The farthest[] array is built in O(n) because the right pointer only advances---it
+never resets as in the brute force case. r moves forward at most n steps, i moves n steps,
+so O(n) total. 
 
-Output: 
+In Phase C, the greedy algorithm only tries starts with value < L as required by the spec. 
+We enforce that the last output = first + P to represent a full loop
 
-Tasks: explain why its worst-case runtime is theta(n)
+The farthest[] array allows each greedy step to be as simple as an array index operation, 
+which is a constant-time jump of O(1) per step, so the runtime for a single start 
+equals the number of segmentsfrom that start.
+
+In the worst case, there are Θ(n) starts and each path has O(n) segments, but due to the 
+precompute we can bound the overall work to Θ(n) since we never re-scan segments across
+these starts.
+
+Thus, the runtime of optimize_fence() can be shown as theta(n).
 '''
 
 def optimize_fence(d, l):
-    # YOUR SOLUTION HERE
     # build wrap around array
+    # PHASE A
     perimeter = d[-1]
     extend = d[:]
     i = 1
-    while extend[-1] < perimeter + l and i is not len(d):
+    while extend[-1] < perimeter + l and i < len(d):
         extend.append(perimeter + d[i])
         i += 1
-    '''
-    Pre-compute technique: apply dynamic sliding window (two pointers)
-    - farther[i] represents the maximal valid index for this i (while <= l)
-    '''
+
+    # PHASE B (sliding window technique)
     r= 0
     farthest = [None] * len(extend) # farthest[i] is a pt as far as possible w/o exceeding l
     for i in range(len(extend)):
@@ -38,7 +47,7 @@ def optimize_fence(d, l):
             r += 1
         farthest[i] = r
 
-    # greedy algorithm: pick min segments
+    # PHASE C greedy algorithm: pick min segments
     best_count = None
     best_output = None
     start = 0
