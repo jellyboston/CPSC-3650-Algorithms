@@ -44,6 +44,8 @@ def main():
 def brute_force_optimize(d, l):
     """ Finds the minimum fence by finding all greedy solitions from all possible starting points """
     # This is not a proper solution because it does not meet the time bound!
+    # d = [0.0, 1.0, 2.5, 4.2, 6.1, 7.8, 10.0]
+    # L = 3
 
     best = None
     
@@ -51,6 +53,8 @@ def brute_force_optimize(d, l):
     start = 0
     while d[start] < l:
         # move points before start to end
+        # start = 0 --> d[0:n] ; repeating greedy algo on candidates
+        # start = 1 --> d[1:n] 
         translated = d[start:]
         for i in range(1, start + 1):
             translated.append(d[i] + d[-1])
