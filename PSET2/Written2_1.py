@@ -1,10 +1,5 @@
 def consecutive_helper(A, i, last, count, total):
     """ 
-    Postcondition - a promise about what is true after the function finishes,
-    if the preconditions were met (connects inputs and outputs)
-
-    “Postcondition: On return, [the output condition] holds if and only if [the relation between inputs/outputs].”
-
     Postcondition: On return, the function holds true if and only if there is a
     consecutive run of 'total' equivalent integers for A[i:]. If count > 0, then this run
     must begin at A[i] and continue for the next 'count' positions with value equal
@@ -59,6 +54,13 @@ def consecutive_helper(A, i, last, count, total):
     holds for this next call. Therefore, the postcondition must also hold true for P(k+1)
     since the current element extends the run correctly under the IH. 
 
-    If else, 
-    
+    In the else case, suppose we again have suffix A[i:] of length k+1. By the logic
+    of consecutive_helper(), it must be true that count is not 0 and the array traversal
+    is not finished. Thus, a recursive call will be made for A[i+1:] with total-1 remaining, which correctly
+    begins a new run from this point. By the inductive hypothesis, the postcondition holds for this smaller
+    suffix P(k+1), and therefore it also holds for A[i:].
+
+    Thus, by weak induction, consecutive_helper() satisfies the postcondtion for all inputs.
     '''
+
+    
