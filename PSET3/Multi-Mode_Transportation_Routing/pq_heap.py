@@ -74,7 +74,7 @@ class PQHeap:
                 self._sink(smallest)
 
 
-    def extract_min(self):
+    def     extract_min(self):
         """ Removes and returns the key with the lowest priority in this queue. """
         min_key = self._heap[0]._key
         self._swap(0, len(self._heap) - 1)
