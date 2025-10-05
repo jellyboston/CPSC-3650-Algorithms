@@ -52,12 +52,15 @@ def expanded_dijsktra(H, V, source, dest):
     # dest node in each of the layers
     end0, end1 = L0(dest), L1(dest, OFFSET)
     fastest_no_coupon = sssp[end0].d
-    fastest_used_coupon = sssp[L1(end1)].d
+    fastest_used_coupon = sssp[end1].d
 
     # edge case: no routes
     if fastest_no_coupon == float('inf') and fastest_used_coupon == float('inf'):
         return None, None, None
-    return sssp, min(fastest_no_coupon, fastest_used_coupon)
+    
+    # select node index to backtrack from next
+    end = end0 if fastest_no_coupon <= fastest_used_coupon else end1
+    return sssp, end
 
 def find_route(car, loop, source, dest):
     """ Finds the shortest path from sourse to destination and returns it as a list
@@ -69,22 +72,6 @@ def find_route(car, loop, source, dest):
         dest -- the index of a vertex in the graphs reachable from and not equal to source
     """
     # YOUR SOLUTION HERE
-    '''
-    My Idea so far:
-    1. Read graph size V
-    2. Build expanded graph H with 2*V vertices
-    3. Add CAR edges to H
-        (u,0) <-> (v,0) with weight w
-        (u,1) <-> (v,1) with weight w
-    4. Add Hyperloop edges to H as one-time coupon transitions
-        (u,0) -> (v,1) with weight w
-        (v,0) -> (u,1) with weight w
-    5. Run Dijsktra once from (s,0)
-    6. Choose best end state 
-    7. Reconstruct expanded-graph node path using parent[]
-    8. Convert to output
-    '''
-
     # build expanded graph H to hold car/loop vertices (size 2V)
     V = car.size()
     expanded_graph = Digraph(2 * V)
@@ -100,8 +87,9 @@ def find_route(car, loop, source, dest):
     # trace back to identify the parent of each node and format to exp output
     results = []
     node = end
-    while sssp_tree.parent[node] is not None or node != source:
-        parent = sssp_tree.parent[node]
+    start_idx = L0(source)
+    while node is not None and node != start_idx:
+        parent = sssp_tree[node].parent
         if parent is None:
             break
         # if expanded, convert offset indices back to og vertex ids
