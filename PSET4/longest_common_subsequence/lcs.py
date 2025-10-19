@@ -15,10 +15,10 @@ def find_lcs(s1, s2, l):
     # YOUR SOLUTION HERE
     # already given the subsequence table, so trace top down
     def backtrace_lcs(result, curr_row, curr_col):
-        while l[curr_row][curr_col] != 0:
+        while curr_row > 0 and curr_col > 0 and l[curr_row][curr_col] != 0:
             # check value of left and above
-            left = l[curr_row][curr_col - 1]
-            above = l[curr_row - 1][curr_col]
+            left = l[curr_row][curr_col - 1] if curr_col > 0 else -1
+            above = l[curr_row - 1][curr_col] if curr_row > 0 else -1
             if l[curr_row][curr_col] == left:
                 # move back and update position to left idx
                 curr_col = curr_col - 1
@@ -33,5 +33,7 @@ def find_lcs(s1, s2, l):
 
     result = []
     # start from bottom right of l
-    curr_row, curr_col = s1.len + 1, s2.len + 1
-    return backtrace_lcs(result, curr_row, curr_col)
+    curr_row, curr_col = len(s1), len(s2)  # since init table size is len() + 1
+    chars = backtrace_lcs(result, curr_row, curr_col)
+    # we appended while walking backwards, so reverse to restore forward order
+    return ''.join(reversed(chars))
