@@ -27,8 +27,9 @@ def vendor_schedule(n, k, profit, m):
         if diff_city >= same_city:
             # move and settle ties if not unique best city
             if best_city == c and best_count == 1:
+                # generator expression to pick largest prev_vals[pc] from other cities
                 prev_city = max((pc for pc in range(k) if pc != c),
-                                key=lambda pc: prev_vals[pc])
+                                key=lambda pc: prev_vals[pc]) # lambda returns candidates for max
             else:
                 candidates = [pc for pc in range(k) if prev_vals[pc] == best_prev and pc != c] \
                              or [pc for pc in range(k) if prev_vals[pc] == best_prev]
