@@ -19,16 +19,39 @@ def vendor_schedule(n, k, profit, m):
         )
         returns: 
     """
-    # YOUR SOLUTION HERE
+    '''
+    determines whether moving or staying is optimal and
+    updates parents in the process
+    '''
+    def choose_move_stay(diff_city, same_city, best_city, best_count, best_prev, c, w, prev_vals):
+        if diff_city >= same_city:
+            # move and settle ties if not unique best city
+            if best_city == c and best_count == 1:
+                prev_city = max((pc for pc in range(k) if pc != c),
+                                key=lambda pc: prev_vals[pc])
+            else:
+                candidates = [pc for pc in range(k) if prev_vals[pc] == best_prev and pc != c] \
+                             or [pc for pc in range(k) if prev_vals[pc] == best_prev]
+                prev_city = candidates[0]
+            trace_parent[c][w] = prev_city
+            return diff_city
+        else:
+            # stay
+            trace_parent[c][w] = c
+            return same_city
+
     '''
     recursive function should return an int of the highest profit 
     correspond to the last week 
     '''
     opt = [[None] * n for _ in range(k)] # profit can potentially be neg
+    trace_parent = [[None] * n for _ in range(k)]
     def memoized_vendor(w, c):
         if w==0: 
-            opt[c][0] = profit[c][0]
-            return profit[c][0]
+            if opt[c][0] is None:
+                opt[c][0] = profit[c][0]
+                trace_parent[c][0] = None 
+                return opt[c][0]
         if opt[c][w] is not None:
             return opt[c][w]
 
@@ -40,31 +63,31 @@ def vendor_schedule(n, k, profit, m):
 
         # account for first/second best values
         best_prev, next_best_prev = float('-inf'), float('-inf')
-        best_city = -1
+        best_city, best_count = -1, 0
         for city_idx, value in enumerate(prev_vals):
-            if prev_vals[city_idx] > best_prev:
+            if value > best_prev:
                 next_best_prev = best_prev
-                best_prev = value
-                best_city = city_idx
-            elif prev_vals[city_idx] > next_best_prev:
+                best_prev, best_city, best_count = value, city_idx, 1
+            elif value == best_prev:
+                # NOTE: we need to keep track of best city ties
+                best_count += 1
+            elif value > next_best_prev:
                 next_best_prev = value
         
         # compute the best previous week's profit traveling from a different city
-        diff_city = (next_best_prev if best_city == c else best_prev) - m
-        opt[c][w] = profit[c][w] + max(diff_city, same_city)
+        diff_city = (next_best_prev if (best_city == c and best_count == 1) else best_prev) - m # if unique
+        move = choose_move_stay(diff_city, same_city, best_city, best_count, best_prev, c, w, prev_vals)
+        opt[c][w] = profit[c][w] + move
         return opt[c][w]
     
-    max_opt_profit = memoized_vendor(n, k)
+    # YOUR SOLUTION HERE
+    opt_vals = [memoized_vendor(n-1, city) for city in range(k)]
+    end_city = max(range(k), key=lambda c: opt_vals[c])
+
     # backtrace
-
-
-
-    return 
-
-'''
-    for w in range(n):
-        for c in range(k):
-            if w==0: memo[c][0] = profit[c][0]
-            # compute the subproblem
-
-'''
+    schedule = [None] * n
+    curr = end_city
+    for week in range(n-1, -1, -1):
+        schedule[week] = curr
+        curr = trace_parent[curr][week]
+    return schedule 
