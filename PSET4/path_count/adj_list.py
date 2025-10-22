@@ -83,4 +83,3 @@ class AdjListGraph:
         results[u].f = time
         results[u].color = 2 # 2 = BLACK/finished
         return time + 1
-
