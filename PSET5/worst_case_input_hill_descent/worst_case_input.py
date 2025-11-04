@@ -34,27 +34,32 @@ def make_grid(h, w):
     i = 4 -> writes row 8 (terminates)
     '''
     for row in range(0, len(snake_rows), 2):
+        r = snake_rows[row]
         # iterate left -> right
         for col in range(w):
-            grid[row][col] = start_val
-            start_val =- 1
+            grid[r][col] = start_val
+            start_val -= 1
         
         # drop only if not OOB (right side of grid)
         if row + 1 < len(snake_rows):
-            for drop_row in range(2):
-                 grid[drop_row][len(snake_rows)] = start_val
-                 start_val =- 1
+            r_next = snake_rows[row + 1] # increments row by 2 for pathing
+            c_turn = w - 1 # represents righte dge
+            for drop_row in range(r + 1, r_next + 1):
+                 grid[drop_row][c_turn] = start_val
+                 start_val -= 1
         
         # right -> left only if not OOB
         if row + 1 < len(snake_rows):
             for col in range(w-1, -1, -1):
-                grid[row + 2][col] = start_val
-                start_val =- 1
+                grid[r_next][col] = start_val
+                start_val -= 1
 
         # again drop (left side of grid)
-        if row + 1 < len(snake_rows):
-            for drop_row in range(2, 4): # draw this out it makes sense
-                grid[drop_row][0] = start_val
-                start_val =- 1
+        if row + 2 < len(snake_rows):
+            r_after = snake_rows[row + 2]
+            c_turn = 0  # ended at left edge
+            for drop_row in range(r_next + 1, r_after + 1): # draw this out it makes sense
+                grid[drop_row][c_turn] = start_val
+                start_val -= 1
 
     return grid
