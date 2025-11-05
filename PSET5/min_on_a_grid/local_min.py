@@ -32,8 +32,6 @@ def find_min(grid):
     def split_min(split_grid, r0, c0):
         # base case: small Kx2 subgrid (height doesn't shrink so idc)
         rows, cols = len(split_grid), len(split_grid[0])
-        if cols == 0:
-            return None
         if cols <= 2:
             # search each cell for local min
             for r in range(rows):
