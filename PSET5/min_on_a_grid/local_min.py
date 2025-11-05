@@ -10,7 +10,7 @@ def find_min(grid):
         # prime the loop
         rows, cols = len(grid), len(grid[0])
         candidate_val = grid[r][c]
-        pivots = [(0,0), (0,1), (1,0), (1,1)]
+        pivots = [(0,1), (0,-1), (1,0), (-1,0)]
 
         # test each pivot direction for other local mins
         for p_r, p_c in pivots:
@@ -21,7 +21,7 @@ def find_min(grid):
     
     def split_min(split_grid):
         # base case: small Kx2 subgrid (height doesn't shrink so idc)
-        rows, cols = len(grid), len(grid[0])
+        rows, cols = len(split_grid), len(split_grid[0])
         if cols <= 2:
             # search each cell for local min
             for r in range(rows):
