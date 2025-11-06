@@ -24,13 +24,14 @@ def find_min(grid):
     
     '''
     recursing on subgrid effectively resets pointer to (0,0), but we need
-    to keep track of original grid indices for testing neighbors w.r.t full grid: 
+    to keep track of original grid indices for testing neighbors w.r.t full grid.
+    We use these two as global indices: 
 
     r0 - row offset that if added would map to original grid row
     c0 - col fofset that if added would map to original grid col
     '''
     def split_min(split_grid, r0, c0):
-        # base case: small Kx2 subgrid (height doesn't shrink so idc)
+        # base case: small Hx2 subgrid (height doesn't shrink so idc)
         rows, cols = len(split_grid), len(split_grid[0])
         if cols <= 2:
             # search each cell for local min
@@ -50,7 +51,7 @@ def find_min(grid):
         left_val = split_grid[min_row][split - 1] if split - 1 >= 0 else float('inf')
         right_val = split_grid[min_row][split + 1] if split + 1 < cols else float ('inf')
 
-        # base case: check if min_val candidate itself is a local min
+        # check if min_val candidate itself is a local min
         if is_local_min(grid, r0 + min_row, c0 + split) == True:
             return min_val
         # recurse on the left
