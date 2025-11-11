@@ -7,38 +7,30 @@ def bipartite_to_flow(g, n, m):
         graph.  Returns a triple containing the flow graph and
         the indices of the source and sink vertices in it.
 
-        g -- a bipartite graph with vertices 0,...,n-1 on the right
-             and n, ..., n+m on the left
+        g -- a bipartite graph with vertices 0,...,n-1 on the left
+             and n, ..., n+m on the right
         n -- a positive integer for the number of vertices on the left
         m -- a positive integer for the number of vertices on the right
     """
     # YOUR SOLUTION HERE
-    '''
-    1. make into DAG
-    2. add src (S) and dst (t) --> directed edges from each to every node
-    3. add weights of 1 to every link 
+    flow_G = FlowGraph(n+m+2) # src and sink (+2)
 
-    Ford-Fulkerson Algorithm
-    - Set reverse edges to weight 0 (make bi-directional)
-    - Find augmenting path (simple path from source to the sink; can use DFS/BFS)
-    - 
-    '''
-    # create new flow graph
-    flow_G = FlowGraph(n+m+2) # must account for src and sink in flow graph (+2)
-
-    # add a source node s (assigned to idx 0)
-    S = 0 
-    for v in range(1, n):
+    # add a source node s
+    S = n + m # assigned after original indices to avoid collisions
+    for v in range(0, n):
         flow_G.add_edge(S, v, 1) # assign capacity = 1 simultaneously
-    # add sink node t (idx len() + 1)
-    T = g.size() + 1
-    for v in range (n+1, m):
-        flow_G.add_edge(T, v, 1)
+    
+    # add sink node t (assigned after S)
+    T = S + 1
+    for v in range(n, n + m):
+        flow_G.add_edge(v, T, 1)
+
     # add connections from the original bp graph
-    for v in range(g.size()):
-        v_edges = g.edges(v)
-        for e in v_edges:
-            flow_G.add_edge(v, e, 1)
+    for u in range(0, n):
+        for v in g.edges(u):
+            # enforce: add direction from l -> r only
+            if v >= n and v < n + m:
+                flow_G.add_edge(u, v, 1)
     
     return flow_G, S, T
 
