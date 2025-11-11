@@ -23,8 +23,24 @@ def bipartite_to_flow(g, n, m):
     - Find augmenting path (simple path from source to the sink; can use DFS/BFS)
     - 
     '''
+    # create new flow graph
+    flow_G = FlowGraph(n+m+2) # must account for src and sink in flow graph (+2)
 
-    return FlowGraph(n+m), n + m, n + m + 1
+    # add a source node s (assigned to idx 0)
+    S = 0 
+    for v in range(1, n):
+        flow_G.add_edge(S, v, 1) # assign capacity = 1 simultaneously
+    # add sink node t (idx len() + 1)
+    T = g.size() + 1
+    for v in range (n+1, m):
+        flow_G.add_edge(T, v, 1)
+    # add connections from the original bp graph
+    for v in range(g.size()):
+        v_edges = g.edges(v)
+        for e in v_edges:
+            flow_G.add_edge(v, e, 1)
+    
+    return flow_G, S, T
 
 
 def flow_to_matching(g, source, sink, n, m):
