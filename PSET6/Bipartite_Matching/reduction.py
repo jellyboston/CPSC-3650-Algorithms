@@ -28,7 +28,7 @@ def bipartite_to_flow(g, n, m):
     # add connections from the original bp graph
     for u in range(0, n):
         for v in g.edges(u):
-            # enforce: add direction from l -> r only
+            # enforce: v is in right only (l->v)
             if v >= n and v < n + m:
                 flow_G.add_edge(u, v, 1)
     
@@ -47,4 +47,14 @@ def flow_to_matching(g, source, sink, n, m):
         m -- a positive integer for the number of vertices on the right
     """
     # YOUR SOLUTION HERE
-    return []
+    # loop over vertices in left
+    S, T = source, sink
+    matching = []
+    for u in range (0, n):
+        for v in g.edges(u):
+            # pick out neighbors on the right
+            if n <= v < n + m:
+                if v.capacity == 1 and v.flow == 1:
+                    matching.append((u,v))
+
+    return matching
