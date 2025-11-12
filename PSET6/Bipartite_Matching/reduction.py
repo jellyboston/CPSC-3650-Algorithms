@@ -51,10 +51,11 @@ def flow_to_matching(g, source, sink, n, m):
     S, T = source, sink
     matching = []
     for u in range (0, n):
-        for v in g.edges(u):
+        for e in g.edges(u): # e becomes HalfEdge type
             # pick out neighbors on the right
-            if n <= v < n + m:
-                if v.capacity == 1 and v.flow == 1:
+            v = e.destination()
+            if v >= n and v < n + m:
+                # if cap is 1, then we know not a backward edge
+                if e.capacity() == 1 and e.flow() == 1:
                     matching.append((u,v))
-
     return matching
