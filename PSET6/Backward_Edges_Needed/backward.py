@@ -16,6 +16,11 @@ def requires_backward(n):
         of vertices.
 
         n -- an integer greater than 1
+
+        Requirements:
+        - Max flow broken FF <= 1/n max flow normal FF 
+        - We need to find a path that prevents flow from being added with normal FF?
+        - flow_with >= n * flow_without
     """
     # YOUR SOLUTION HERE
     # make a graph with two vertices (souce 0, sink 1)

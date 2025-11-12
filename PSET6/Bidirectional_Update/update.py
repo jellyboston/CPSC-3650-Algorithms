@@ -26,9 +26,6 @@ def update(e, reverse, b):
       (v,u): c=4, f=2
       b=4
     '''
-   # note that this implementation assumes only one edge with positive capacity
-    # as in the original statement of the problem
-
     # cancel flow in opposite-direction first
     c = min(b, reverse.flow())
     if c > 0:
