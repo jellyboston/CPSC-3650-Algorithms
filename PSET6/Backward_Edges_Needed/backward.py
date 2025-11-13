@@ -24,9 +24,15 @@ def requires_backward(n):
     """
     # YOUR SOLUTION HERE
     # make a graph with two vertices (souce 0, sink 1)
-    g = FlowGraph(2)
+    g = FlowGraph(4)
 
     # add edge (0, 1) with capacity 1
     g.add_edge(0, 1, 1)
+    g.add_edge(1, 3, 1)
+    g.add_edge(0, 2, n)
+    g.add_edge(2, 1, n)
 
-    return g, 0, 1, [0, 1]
+    src, sink = 0, 3
+    p = [0, 1, 3]
+
+    return g, src, sink, p
