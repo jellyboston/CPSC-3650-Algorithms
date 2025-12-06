@@ -19,20 +19,23 @@ def verify(g, path):
     2. visits remaining vertex **at least once** (>= ok)
     3. does not traverse any edge more than once
     '''
+    # check vertex constraints
     count_vertex = [0] * g.size()
     for v in path:
         count_vertex[v] += 1
-    # verify
-    remaining_vertex = -1
-    found = False
-    for v in count_vertex:
-        # if some other vertex is visited multiple times
-        if v != remaining_vertex and found and count_vertex[v] >= 2:
+    num_single = 0
+    num_remain = 0
+    for idx, count in enumerate(count_vertex):
+        if count == 1:
+            num_single += 1
+        elif count >= 1:
+            num_remain += 1
+        elif count == 0:
+            # vertex not visited
             return False
-        elif count_vertex[v] >= 2:
-            found = True
-            remaining_vertex = v
-        else:
-            continue
+
+    # check edge constraints
+
+
     
     return False
