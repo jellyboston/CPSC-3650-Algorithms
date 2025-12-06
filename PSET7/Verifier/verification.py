@@ -7,11 +7,12 @@ def verify(g, path):
     """
     # YOUR SOLUTION HERE
     # enforce valid path (w/ adjacency check)
-    for idx in range(len(path) - 1):
-        u = path[idx]
-        v = path[idx+1]
-        if not g.has_edge(u, v):
-            return False # path has invalid edge
+    # for idx in range(len(path) - 1):
+    #     u = path[idx]
+    #     v = path[idx+1]
+    #     if not g.has_edge(u, v):
+    #         return False # path has invalid edge
+    
     
     '''
     APPROX-HP invariant:
@@ -22,17 +23,19 @@ def verify(g, path):
     # check vertex constraints
     count_vertex = [0] * g.size()
     for v in path:
+        # edge case: invalid vertex
+        if v < 0 or v >= g.size():
+            return False
         count_vertex[v] += 1
     num_single = 0
-    num_remain = 0
     for idx, count in enumerate(count_vertex):
-        if count == 1:
-            num_single += 1
-        elif count >= 1:
-            num_remain += 1
-        elif count == 0:
+        if count == 0:
             # vertex not visited
             return False
+        if count == 1:
+            num_single += 1
+    if num_single < g.size() - 1:
+        return False
 
     # check edge constraints
     used_edges = []
@@ -44,5 +47,5 @@ def verify(g, path):
             return False
         else:
             used_edges.append(edge)
-
+            
     return True
