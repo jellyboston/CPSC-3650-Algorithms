@@ -35,7 +35,14 @@ def verify(g, path):
             return False
 
     # check edge constraints
+    used_edges = []
+    for idx in range(len(path) - 1):
+        u = path[idx]
+        v = path[idx+1]
+        edge = (min(u, v), max(u, v)) # normalize since undirected
+        if edge in used_edges:
+            return False
+        else:
+            used_edges.append(edge)
 
-
-    
-    return False
+    return True
